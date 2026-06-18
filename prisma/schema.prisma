@@ -1,0 +1,169 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+model Booker {
+  id        String    @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  bookings  Booking[]
+
+  @@index([email])
+}
+
+model Booking {
+  id               String           @id @default(cuid())
+  bookerId         String
+  booker           Booker           @relation(fields: [bookerId], references: [id])
+  date             DateTime         @db.Date
+  startTime        String           
+  endTime          String          
+  sessionType      SessionType      @default(VIDEO)
+  sessionFormat    SessionFormat    @default(SINGLE)
+  status           BookingStatus    @default(PENDING)
+  manageToken      String           @unique @default(cuid())
+  meetLink         String?
+  calendarEventId  String?
+  recurringSeriesId String?
+  recurringSeries  RecurringSeries? @relation(fields: [recurringSeriesId], references: [id])
+  reasonForSession String?
+  notes            String?         
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  @@index([date])
+  @@index([manageToken])
+  @@index([status])
+  @@index([recurringSeriesId])
+}
+
+model RecurringSeries {
+  id        String            @id @default(cuid())
+  frequency RecurringFrequency
+  startDate DateTime          @db.Date
+  endDate   DateTime          @db.Date
+  createdAt DateTime          @default(now())
+  bookings  Booking[]
+}
+
+model WorkingHours {
+  id        String   @id @default(cuid())
+  dayOfWeek Int     
+  startTime String  
+  endTime   String 
+  isActive  Boolean  @default(true)
+  updatedAt DateTime @updatedAt
+
+  @@unique([dayOfWeek])
+}
+
+model BlockedDate {
+  id     String   @id @default(cuid())
+  date   DateTime @db.Date
+  reason String?
+
+  @@unique([date])
+  @@index([date])
+}
+
+model Donation {
+  id                 String          @id @default(cuid())
+  name               String?
+  email              String?
+  amount             Decimal         @db.Decimal(10, 2)
+  currency           String          @default("USD")
+  gateway            PaymentGateway
+  transactionReference String?       @unique
+  status             DonationStatus  @default(PENDING)
+  isAnonymous        Boolean         @default(false)
+  createdAt          DateTime        @default(now())
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  role         AdminRole @default(COUNSELOR)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  sessions     AdminSession[]
+}
+
+model AdminSession {
+  id        String    @id @default(cuid())
+  token     String    @unique @default(cuid())
+  adminId   String
+  admin     AdminUser @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+
+  @@index([token])
+}
+
+model CounselorProfile {
+  id             String   @id @default(cuid())
+  name           String   @default("Efe")
+  bio            String?  @db.Text
+  photoUrl       String?
+  qualifications String[] 
+  email          String?
+  phone          String?
+  website        String?
+  instagram      String?
+  twitter        String?
+  updatedAt      DateTime @updatedAt
+}
+
+enum SessionType {
+  VIDEO
+  AUDIO
+}
+
+enum SessionFormat {
+  SINGLE
+  RECURRING
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+  NO_SHOW
+  RESCHEDULED
+}
+
+enum RecurringFrequency {
+  WEEKLY
+  BIWEEKLY
+  MONTHLY
+}
+
+enum PaymentGateway {
+  STRIPE
+  FLUTTERWAVE
+}
+
+enum DonationStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum AdminRole {
+  COUNSELOR
+  ADMIN
+}

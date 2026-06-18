@@ -1,26 +1,197 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  /* Existing theme variables */
+  --color-brand-white: #ffffff;
+  --color-brand-cherry: #68764B;
+  --color-brand-cherry-soft:#BFD9AF;
+  --color-brand-cherry-dark: #454f31;
+  --color-brand-smoke: #f2f2f2;
+  --color-brand-coral:#e37e74;
+  --color-brand-coral-dark:#96313a;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Fonts */
+  --font-sans: var(--font-nunito-sans);
+  --font-nunito: var(--font-nunito-sans);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Custom shadows */
+  --shadow-cherry: 0 4px 14px 0 rgba(104, 118, 75, 0.2);
+  --shadow-cherry-lg: 0 10px 25px -3px rgba(104, 118, 75, 0.3);
+  --shadow-coral: 0 4px 14px 0 rgba(226, 124, 130, 0.2);
+
+  /* Gradient backgrounds */
+  --background-image-cherry-gradient: linear-gradient(135deg, #68764B 0%, #454f31 100%);
+  
+  /* Animation utilities */
+  --animate-fade-up: fadeUp 0.6s ease forwards;
+  --animate-fade-in: fadeIn 0.4s ease forwards;
+
+  --breakpoint-md: 700px;
+  --breakpoint-sm: 450px;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-brand-white);
+    color: #1a1a1a;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 800;
+  }
+  
+  /* .custom-radius{
+    border-radius: 10% 60% 46% 54% / 60% 20% 13% 10%;
+  } */
+
+  /* Custom select styling */
+
+ 
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
+    -webkit-text-fill-color: #000000 !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  
+  /* Custom arrow icon (using SVG data URI) */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1rem;
+}
+
+select::-ms-expand {
+  display: none;
+}
+
+/* Style the select element itself */
+select {
+  background-color: white;
+  color: #1a1a1a;
+  font-weight: 500;
+}
+
+/* Style options - works in most modern browsers */
+select option {
+  background-color: white;
+  color: #1a1a1a;
+  padding: 0.75rem;
+}
+
+/* Hover/focus state for options */
+select option:hover {
+  background-color: #6d0f15;
+  color: white;
+}
+}
+
+@layer components {
+  .rounded-custom {
+    border-radius: 35px 25px 35px 25px;
+  }
+
+  .btn-primary {
+    @apply bg-brand-cherry text-white font-bold rounded-xl
+      hover:bg-brand-cherry-dark transition-all duration-200 
+      shadow-cherry hover:shadow-cherry-lg active:scale-95;
+  }
+
+  .btn-secondary {
+    @apply bg-transparent border border-brand-cherry text-brand-cherry 
+      font-bold rounded-xl hover:bg-brand-cherry hover:text-white 
+      transition-all duration-200 active:scale-95;
+  }
+
+  .btn-coral {
+    @apply bg-brand-coral text-white font-bold rounded-xl
+      hover:bg-brand-coral-dark transition-all duration-200
+      shadow-coral hover:shadow-cherry active:scale-95;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl shadow-sm border border-gray-100 lg:p-6 p-4;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 rounded-xl border border-gray-200 bg-white
+      font-sans text-sm focus:outline-none focus:ring-2 focus:ring-brand-cherry/30
+      focus:border-brand-cherry transition-all placeholder:text-gray-400;
+  }
+
+  .label {
+    @apply block text-sm font-semibold text-gray-700 mb-1.5;
+  }
+
+  .section-title {
+    @apply text-3xl lg:text-4xl font-extrabold text-gray-900;
+  }
+
+  .section-subtitle {
+    @apply text-base lg:text-lg text-gray-500 mt-2 font-medium;
+  }
+}
+
+/* Keyframes for animations */
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  /* background: var(--color-brand-smoke); */
+}
+::-webkit-scrollbar-thumb {
+  /* background: var(--color-brand-coral); */
+  border-radius: 3px;
+}
+
+/* Page transition (using the same fadeUp keyframe) */
+.page-enter {
+  animation: fadeUp 0.5s ease forwards;
 }
