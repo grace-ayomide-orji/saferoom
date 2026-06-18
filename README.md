@@ -56,7 +56,7 @@ cd safe-room
 ### Install Dependencies
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### Configure Environment Variables
