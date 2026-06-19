@@ -330,7 +330,7 @@ export default function ManagePage({
             <p className="text-gray-500 text-sm mb-5">
               Your session has been cancelled.
             </p>
-            <Link href="/book" className="btn-primary text-sm">
+            <Link href="/book" className="btn-primary text-sm p-2">
               Book a New Session
             </Link>
           </div>
