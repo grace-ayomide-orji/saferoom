@@ -101,7 +101,7 @@ export default async function HomePage() {
             {
               step: "01",
               title: "Choose a time",
-              desc: "Pick a date and time slot that works for you from Efe's live availability.",
+              desc: "Pick a date and time slot that works for you from our live availability.",
               icon: Calendar,
             },
             {
